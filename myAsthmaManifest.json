@@ -1,0 +1,6 @@
+{
+    "name":"asthmaTrack",
+    "description":"Asthma tracker",
+    "icon":"https://static.ddmcdn.com/gif/lungs-reseeding-transplant-677034-.jpg",
+    "onclick":"http://localhost:8000/asthmatrackApp/asthmaTrackApp.js"
+}
