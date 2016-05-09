@@ -1,6 +1,6 @@
 {
     "name":"asthmaTrack",
     "description":"Asthma tracker",
-    "icon":"http://asthmatrack.github.io/app/img/lungs.jpg",
-    "onclick":"http://localhost:8000/asthmatrackApp/asthmaTrackApp.js"
+    "icon":"https://asthmatrack.github.io/app/img/lungs.jpg",
+    "onclick":"https://asthmatrack.github.io/app/asthmaTrackApp.js"
 }
