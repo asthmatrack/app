@@ -78,7 +78,7 @@ console.log('loaded myAsthma.js :-)');
                 }
                 
             }
-            loadFileDiv.hidden=true
+            //loadFileDiv.hidden=true
         }
     }
     inputFile.onchange=function(evt){
@@ -168,10 +168,6 @@ console.log('loaded myAsthma.js :-)');
                 asthmaLogBookRecord.className="btn btn-danger"
                 break
         }
-
-        
-
-        
     }
 
     // load history
