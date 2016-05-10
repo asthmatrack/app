@@ -3,17 +3,17 @@
   "name": "Asthma Track",
   "short_name": "asthmaTrack",
   "icons": [{
-        "src": "img/sbm48.png",
+        "src": "img/lungs48.png",
         "sizes": "48x48"
       },{
-        "src": "img/sbm96.png",
+        "src": "img/lungs96.png",
         "sizes": "96x96"
       },{
-        "src": "img/sbm128.png",
+        "src": "img/lungs128.png",
         "sizes": "128x128"
       }],
   "splash_screens": [{
-        "src": "snapshot.png",
+        "src": "img/snapshot.png",
         "sizes": "748x590"
       }],
   "start_url": "https://asthmatrack.github.io/app/index.html",
