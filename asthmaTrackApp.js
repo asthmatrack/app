@@ -174,6 +174,7 @@ console.log('loaded myAsthma.js :-)');
             this.clicked=true
             this.style.fontSize=75
             howDoYouFeelTxt.style.color=this.style.color
+            howDoYouFeelTxt.style.backgroundColor=''
             var h = ''
             switch(this.style.color) {
                 case "green":
@@ -190,7 +191,7 @@ console.log('loaded myAsthma.js :-)');
                     console.log('MEDICAL ALERT.')
                     howDoYouFeelTxt.style.verticalAlign="bottom"
                     var h = 'This could be a medical emergency. Please consult your Asthma Medical plan for immediate relief and follow the EMERGENCY plan if you can\'t reach your doctor after <span style="color:blue">15 minutes</span>.'
-                    h += '<p style="background-color:yellow;text-align:center">Time since MEDICAL ALERT: <span id="timeSinceALERT" style="color:blue;font-size:xx-large">0:00</span></p>'
+                    h += '<p id="alertTimerBanner" style="background-color:yellow;text-align:center">Time since MEDICAL ALERT: <span id="timeSinceALERT" style="color:blue;font-size:xx-large">0:00</span></p>'
                     howDoYouFeelTxt.innerHTML=h
                     howDoYouFeelTxt.alertTimeCounter = {}
                     howDoYouFeelTxt.alertTimeCounter.time0=new Date()
@@ -198,6 +199,12 @@ console.log('loaded myAsthma.js :-)');
                         var t = (new Date()-howDoYouFeelTxt.alertTimeCounter.time0)
                         var mm = Math.floor(t/1000/60)
                         var ss = Math.round((t-mm*60*1000)/1000)
+                        if(mm>-14){
+                            alertTimerBanner.style.backgroundColor=""
+                            setTimeout(function(){alertTimerBanner.style.backgroundColor="yellow"},250)
+                            setTimeout(function(){alertTimerBanner.style.backgroundColor=""},500)
+                            setTimeout(function(){alertTimerBanner.style.backgroundColor="yellow"},750)
+                        }
                         if(ss.toString().length<2){ss = '0'+ss.toString()}
                         if(document.getElementById('timeSinceALERT')){
                             timeSinceALERT.textContent=mm+':'+ss
@@ -214,7 +221,7 @@ console.log('loaded myAsthma.js :-)');
             h += '<div id="asthmaActionRecordUI" style="font-size:x-large">...</div>'
             howDoYouFeelTxt.innerHTML=h
             h='<h3> <button id="asthmaLogBookSave" style="font-size:x-large">Save</button> in Log Book:</h3>'
-            h += '<p style="font-style:italic;font-size:large">&nbsp Used Inhaler <input id="usedInhaler" type="checkbox"> / Spacer <input id="usedSpacer" type="checkbox"> <a href="http://www.asthma.ca/adults/treatment/spacers.php">?</a></p>'
+            h += '<p style="font-style:italic;font-size:large">&nbsp Used Inhaler <input id="usedInhaler" type="checkbox"> / Spacer <input id="usedSpacer" type="checkbox"> <a href="https://www.youtube.com/watch?v=BbONuRXJdr0" target="_blank">?</a></p>'
             h += '<p style="font-style:italic;font-size:large">&nbsp Took Medicine <input id="tookPills" type="checkbox"> <span style="font-size:medium">(pill / tablet)</span></p>'
             h += '<p style="font-style:italic;font-size:large">&nbsp Indoors <input id="amIndoors" type="checkbox"> / Outdoors <input id="amOutdoors" type="checkbox"></p>'
             h += '<p style="font-style:italic;font-size:large">&nbsp Exercising <input id="amExercising" type="checkbox"> / Not <input id="notExercising" type="checkbox"></p>'
