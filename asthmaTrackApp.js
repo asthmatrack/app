@@ -213,11 +213,11 @@ console.log('loaded myAsthma.js :-)');
             // add recording UI
             h += '<div id="asthmaActionRecordUI" style="font-size:x-large">...</div>'
             howDoYouFeelTxt.innerHTML=h
-            h='<h3> <button id="asthmaLogBookSave" style="font-size:x-large">Save</button> in your Log Book:</h3>'
-            h += '<p style="font-style:italic">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Used Inhaler <input id="usedInhaler" type="checkbox"> / Spacer <input id="usedSpacer" type="checkbox"> <a href="http://www.asthma.ca/adults/treatment/spacers.php">?</a></p>'
-            h += '<p style="font-style:italic">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Took Medicine <input id="tookPills" type="checkbox"> <span style="font-size:medium">(pill / tablet)</span></p>'
-            h += '<p style="font-style:italic">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Indoors <input id="amIndoors" type="checkbox"> / Outdoors <input id="amOutdoors" type="checkbox"></p>'
-            h += '<p style="font-style:italic">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Exercising <input id="amExercising" type="checkbox"> / Not <input id="notExercising" type="checkbox"></p>'
+            h='<h3> <button id="asthmaLogBookSave" style="font-size:x-large">Save</button> in Log Book:</h3>'
+            h += '<p style="font-style:italic;font-size:large">&nbsp Used Inhaler <input id="usedInhaler" type="checkbox"> / Spacer <input id="usedSpacer" type="checkbox"> <a href="http://www.asthma.ca/adults/treatment/spacers.php">?</a></p>'
+            h += '<p style="font-style:italic;font-size:large">&nbsp Took Medicine <input id="tookPills" type="checkbox"> <span style="font-size:medium">(pill / tablet)</span></p>'
+            h += '<p style="font-style:italic;font-size:large">&nbsp Indoors <input id="amIndoors" type="checkbox"> / Outdoors <input id="amOutdoors" type="checkbox"></p>'
+            h += '<p style="font-style:italic;font-size:large">&nbsp Exercising <input id="amExercising" type="checkbox"> / Not <input id="notExercising" type="checkbox"></p>'
 
             asthmaActionRecordUI.innerHTML=h
             // button decoration
