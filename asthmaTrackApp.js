@@ -23,7 +23,7 @@ console.log('loaded myAsthma.js :-)');
             h += '</td>'
         h += '</tr></table>'
     h += '</div>'
-    h += '<hr><div id="myAsthmaPlanDiv"><img id="myAsthmaPlan" class="zoomTarget"></div>'
+    h += '<hr><div id="myAsthmaPlanDiv"><img id="myAsthmaPlan" width="100%"></div>'
     h += '</div>'
     //sbmApps.getScripts([],fun)
     sbmApps.render(h)
