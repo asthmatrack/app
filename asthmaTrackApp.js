@@ -33,7 +33,7 @@ console.log('loaded myAsthma.js :-)');
         reader.onload=function(f){
             //localStorage.removeItem('myAsthmaPlan') // otherwiese localStorage may be full
             localforage.setItem('myAsthmaPlan',f.target.result,function(err,x){
-                console.log('pic size '+f.total+' saved in localStorage')
+                console.log('pic size '+f.total+' saved in localforage')
                 loadImg()
             })
             
@@ -242,10 +242,10 @@ console.log('loaded myAsthma.js :-)');
         // load history
             var loadAsthmaHistory=function(){
                 //if(localStorage.asthmaHistory){
-                    console.log('load asthma history')
+                    console.log('loading asthma history')
                     $.getScript('https://www.gstatic.com/charts/loader.js')
                      .then(function(){
-                        var asthmaHistory=JSON.parse(localStorage.asthmaHistory) 
+                        //var asthmaHistory=JSON.parse(localStorage.asthmaHistory) 
                         google.charts.load('current', {'packages':['timeline']});
                         google.charts.setOnLoadCallback(drawChart);
 
