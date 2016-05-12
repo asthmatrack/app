@@ -199,7 +199,7 @@ console.log('loaded myAsthma.js :-)');
                         var t = (new Date()-howDoYouFeelTxt.alertTimeCounter.time0)
                         var mm = Math.floor(t/1000/60)
                         var ss = Math.round((t-mm*60*1000)/1000)
-                        if(mm>-14){
+                        if(mm>14){
                             alertTimerBanner.style.backgroundColor=""
                             setTimeout(function(){alertTimerBanner.style.backgroundColor="yellow"},250)
                             setTimeout(function(){alertTimerBanner.style.backgroundColor=""},500)
