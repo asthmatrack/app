@@ -120,51 +120,50 @@ console.log('loaded myAsthma.js :-)');
         }
 
         // save event listener
-            asthmaLogBookSaveOnclick=function(){   
-            
-                                    asthmaLogBookSave.onclick=function(){
-                                        var bt = this
-                                        bt.textContent='saving ...'
-                                        bt.disabled=true
-                                        localforage.getItem('myAsthmaHistory', function(err, dt) {
-                                            var book ={
-                                                color:bt.parentElement.parentElement.parentElement.style.color,
-                                                usedInhaler:usedInhaler.checked,
-                                                usedSpacer:usedSpacer.checked,
-                                                tookPills:tookPills.checked,
-                                                amIndoors:amIndoors.checked,
-                                                amOutdoors:amOutdoors.checked,
-                                                amExercising:amExercising.checked,
-                                                notExercising:notExercising.checked
-                                            }
-                                            switch(book.color) {
-                                                case "green":
-                                                        book.status='Well'
-                                                    break
-                                                case "orange":
-                                                        book.status='Caution'
-                                                    break
-                                                case "red":
-                                                        book.status='Alert'
-                                                    break
-                                            }
-                                            var tnow = new Date()
-                                            dt.book[tnow]=book
-                                            dt.tarray.push([book.status,tnow,new Date(tnow.getTime()+1000)])
-                                            var n = dt.tarray.length
-                                            if(n>4){ // past seed values
-                                                dt.tarray[n-2][2]=tnow
-                                            }
-                                            localforage.setItem('myAsthmaHistory', dt, function(err,dt){
-                                                setTimeout(function(){
-                                                    bt.textContent='Save'
-                                                    bt.disabled=false
-                                                },1000)
-                                                howDoYouFeelDiv.drawChart()
-                                            })
-                                            4
-                                        })
-                                        4
+            asthmaLogBookSaveOnclick=function(){
+                asthmaLogBookSave.onclick=function(){
+                var bt = this
+                bt.textContent='saving ...'
+                bt.disabled=true
+                localforage.getItem('myAsthmaHistory', function(err, dt) {
+                    var book ={
+                        color:bt.parentElement.parentElement.parentElement.style.color,
+                        usedInhaler:usedInhaler.checked,
+                        usedSpacer:usedSpacer.checked,
+                        tookPills:tookPills.checked,
+                        amIndoors:amIndoors.checked,
+                        amOutdoors:amOutdoors.checked,
+                        amExercising:amExercising.checked,
+                        notExercising:notExercising.checked
+                    }
+                    switch(book.color) {
+                        case "green":
+                                book.status='Well'
+                            break
+                        case "orange":
+                                book.status='Caution'
+                            break
+                        case "red":
+                                book.status='Alert'
+                            break
+                    }
+                    var tnow = new Date()
+                    dt.book[tnow]=book
+                    dt.tarray.push([book.status,tnow,new Date(tnow.getTime()+1000)])
+                    var n = dt.tarray.length
+                    if(n>4){ // past seed values
+                        dt.tarray[n-2][2]=tnow
+                    }
+                    localforage.setItem('myAsthmaHistory', dt, function(err,dt){
+                        setTimeout(function(){
+                            bt.textContent='Save'
+                            bt.disabled=false
+                        },1000)
+                        howDoYouFeelDiv.drawChart()
+                    })
+                    4
+                })
+                4
                                     }
             }
 
