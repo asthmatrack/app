@@ -10,6 +10,7 @@ console.log('loaded myAsthma.js :-)');
     h += '<div id="myAsthmaHistoryDiv" style="color:red">'
     h += 'loading history ...'
     h += '</div>'
+    h += '<div id="myAsthmaPlotDiv" style="color:red">ploting ...</div>'
     h += '<div id="howDoYouFeelDiv">'
         //h += 'How do you feel'
         h += '<table id="howDoYouFeelTable"><tr>'
@@ -27,8 +28,8 @@ console.log('loaded myAsthma.js :-)');
     h += '</div>'
     //sbmApps.getScripts([],fun)
     sbmApps.render(h)
-    //document.body.innerHTML=h
-    sbmApps.getScripts(['https://asthmatrack.github.io/app/src/localforage.js'],function(){
+    //document.body.innerHTML=h    
+    sbmApps.getScripts(['https://asthmatrack.github.io/app/src/localforage.js','https://cdn.plot.ly/plotly-latest.min.js'],function(){
         var reader = new FileReader()
         reader.onload=function(f){
             //localStorage.removeItem('myAsthmaPlan') // otherwiese localStorage may be full
@@ -277,9 +278,141 @@ console.log('loaded myAsthma.js :-)');
 
                                     
 
+                                    myAsthmaPlotDiv.innerHTML='<button id="daySelected" style="font-size:large">day</button> <button  id="weekSelected" style="font-size:large">week</button> <button id="monthSelected" style="font-size:large">month</button> <button id="yearSelected" style="font-size:large">year</button><div id="asthmaPlotLy"></div>'
+                                    daySelected.onclick=weekSelected.onclick=monthSelected.onclick=yearSelected.onclick=function(){
+                                        myAsthmaPlotDiv.selected=this.textContent
+                                        updateButtons()
+                                        console.log('myAsthmaPlotDiv.selected="'+myAsthmaPlotDiv.selected+'"')
+                                    }
+                                    var updateButtons = function(){
+                                        if(!myAsthmaPlotDiv.selected){
+                                            myAsthmaPlotDiv.selected="week" // default 
+                                        }
+                                        $('button',myAsthmaPlotDiv).map(function(i,bt){
+                                            if(bt.textContent==myAsthmaPlotDiv.selected){
+                                                bt.style.color="blue"
+                                                bt.style.fontSize="x-large"
+                                            }else{
+                                                bt.style.color="red"
+                                                bt.style.fontSize="large"
+                                            }
+                                            4
+                                        })
+                                    }
+                                    updateButtons()
+
+                                    //extract data from entries in log book into plotly notation
+
+                                    var getDataColor = function(dt,color,y){
+                                        if(!color){color="orange"}
+                                        if(!y){
+                                            y={
+                                                mode: 'markers',
+                                                name: 'Well',
+                                                marker: {
+                                                  color: color,
+                                                  line: {color: 'black'}
+                                                },
+                                                type: 'scatter',
+                                                log:[]
+                                            }
+                                        }
+                                        Object.getOwnPropertyNames(dt.book).forEach(function(p){
+                                            var d = dt.book[p]
+                                            if(d.color==color){
+                                                y.log.push(p)
+                                            }
+                                        })
+                                        return y
+                                    }
+
+                                    var dtGreen = getDataColor(dt,'green')
+                                    var dtOrange = getDataColor(dt,'orange')
+                                    var dtRed = getDataColor(dt,'red')
+
+                                    var calcPolar = function(x){
+                                        // scale axis
+                                        switch(myAsthmaPlotDiv.selected){
+                                            case "day":
+                                                break;
+                                            case "week":
+                                                console.log('working scales for '+myAsthmaPlotDiv.selected)
+                                                var getRT=function(l){
+                                                    var dayOfWeek=function(l){
+                                                        if(!l){l=Date()}
+                                                        var dw //day of the week
+                                                        switch(l.slice(0,3)){
+                                                            case "Sun":
+                                                                dw=0
+                                                            break;
+                                                            case "Mon":
+                                                                dw=1
+                                                            break;
+                                                            case "Tue":
+                                                                dw=2
+                                                            break;
+                                                            case "Wed":
+                                                                dw=3
+                                                            break;
+                                                            case "Thu":
+                                                                dw=4
+                                                            break;
+                                                            case "Fri":
+                                                                dw=5
+                                                            break;
+                                                            case "Sat":
+                                                                dw=6
+                                                            break;
+                                                        }
+                                                        l = new Date(l)
+                                                        dw += (l.getHours()+l.getMinutes()/60+l.getSeconds()/360)/24
+                                                        return dw
+                                                    }
+                                                    var l0 = Date() // now as a string
+                                                    dw0=dayOfWeek(l0) // day of the week right now
+                                                    l0 = new Date(l0) // now as a Date object
+                                                    var RT = x.log.map(function(li){
+                                                        // calculate time in fraction of a week since beginning of the week
+                                                        var tm = (dw0+(l0.getTime()-(new Date(li)).getTime())/(3600*1000*24))/7
+                                                        return [tm-Math.floor(tm),Math.floor(tm)]
+                                                    })
+                                                    RT.filter(function(rt){
+                                                        return rt[1]<=5 // cap it at 5 weeks
+                                                    })
+                                                    x.r=[]
+                                                    x.t=[]
+                                                    RT.forEach(function(rt){
+                                                        x.r.push(7-rt[1])
+                                                        x.t.push(rt[0]*360)
+                                                    })
+                                                    return x
+                                                }
+                                            break;
+                                            case "month":
+                                                break;
+                                            case "year":
+                                                break;
+                                        }
 
 
+                                        /*
+                                        x.r=[]
+                                        x.t=[]
+                                        x.log.forEach(function(l){
+                                            var rt = getRT(l)
+                                            x.r.push(rt[0])
+                                            x.r.push(rt[1])
+                                        })
+                                        */
 
+
+                                        return getRT(x)
+                                    }
+                                    dtGreen=calcPolar(dtGreen)
+                                    dtOrange=calcPolar(dtOrange)
+                                    dtRed=calcPolar(dtRed)
+                                    
+                                    4
                                 }else{
                                     localforage.setItem('myAsthmaHistory',
                                        {"tarray":
@@ -294,24 +427,87 @@ console.log('loaded myAsthma.js :-)');
                                     })
 
                                 }
-                                  /*
-                                  localforage.setItem('myAsthmaHistory',[
-                                    ['Well',     new Date(2000, 8, 5), new Date(2001, 1, 5)],
-                                    ['Caution', new Date(2001, 8, 5), new Date(2002, 1, 5)],
-                                    ['Alert', new Date(2002, 8, 5), new Date(2003, 1, 5)],
-                                    ['Well', new Date(2003, 8, 5), new Date(2004, 1, 5)],
-                                    ['Alert', new Date(2004, 8, 5), new Date(2005, 1, 5)],
-                                    ['Caution',  new Date(2005, 8, 5), new Date(2006, 1, 5)],
-                                    ['Well',   new Date(2006, 8, 5), new Date(2007, 1, 5)],
-                                    ['Well',      new Date(2007, 8, 5), new Date(2008, 1, 5)],
-                                    ['Caution',  new Date(2008, 8, 5), new Date(2009, 1, 5)],
-                                    ['Well',   new Date(2009, 8, 5), new Date(2010, 1, 5)],
-                                    ['Alert',    new Date(2010, 8, 5), new Date(2011, 1, 5)],
-                                    ['Well',      new Date(2011, 8, 5), new Date(2012, 1, 5)],
-                                    ['Caution',     new Date(2012, 8, 5), new Date(2013, 1, 5)],
-                                    ['Alert',     new Date(2013, 8, 5), new Date(2014, 1, 5)],
-                                  ])
-                                  */
+                                // plotLy at myAsthmaPlotDiv
+
+                                
+                                
+
+                                /*
+                                data.push({
+                                  r: [1, 0.995, 0.978, 0.951, 0.914, 0.866, 0.809, 0.743, 0.669, 0.588, 0.5, 0.407, 0.309, 0.208, 0.105, 0, 0.105, 0.208, 0.309, 0.407, 0.5, 0.588, 0.669, 0.743, 0.809, 0.866, 0.914, 0.951, 0.978, 0.995, 1, 0.995, 0.978, 0.951, 0.914, 0.866, 0.809, 0.743, 0.669, 0.588, 0.5, 0.407, 0.309, 0.208, 0.105, 0, 0.105, 0.208, 0.309, 0.407, 0.5, 0.588, 0.669, 0.743, 0.809, 0.866, 0.914, 0.951, 0.978, 0.995, 1],
+                                  t: [0, 6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66, 72, 78, 84, 90, 96, 102, 108, 114, 120, 126, 132, 138, 144, 150, 156, 162, 168, 174, 180, 186, 192, 198, 204, 210, 216, 222, 228, 234, 240, 246, 252, 258, 264, 270, 276, 282, 288, 294, 300, 306, 312, 318, 324, 330, 336, 342, 348, 354, 360],
+                                  mode: 'markers',
+                                  name: 'Figure8',
+                                  marker: {
+                                    color: 'none',
+                                    line: {color: 'peru'}
+                                  },
+                                  type: 'scatter'
+                                });
+                                */
+                                data=[dtGreen,dtOrange,dtRed]
+
+                                /*data.push({
+                                  r:[0,0.15,0.2,0.3,0.4,0.5],
+                                  t:[0,10,20,30,40,50],
+                                  mode: 'markers',
+                                  name: 'Well',
+                                  marker: {
+                                    color: 'green',
+                                    line: {color: 'black'}
+                                  },
+                                  type: 'scatter'
+                                })
+                                */
+
+                                // get times from book
+
+                                var Ind = Object.getOwnPropertyNames(dt.book);
+
+                                var tt = Ind.map(function(ti){ // array of times
+                                    return new Date(ti)
+                                })
+
+                                var cr = tt.map(function(ti){ // array of color of how u feel
+                                    return dt.book[ti].color
+                                })
+
+                                
+
+
+                                4
+                                
+
+
+
+                                var layout = {
+                                  title: 'Mic Patterns',
+                                  font: {
+                                    family: 'Arial, sans-serif;',
+                                    size: 12,
+                                    color: '#000'
+                                  },
+                                  showlegend: true,
+                                  width: 500,
+                                  height: 400,
+                                  margin: {
+                                    l: 40,
+                                    r: 40,
+                                    b: 20,
+                                    t: 40,
+                                    pad: 0
+                                  },
+                                  paper_bgcolor: 'rgb(255, 255, 255)',
+                                  plot_bgcolor: 'rgb(255, 255, 255)',
+                                  orientation: -90
+                                };
+
+                                Plotly.newPlot('asthmaPlotLy', data, layout);
+
+
+                                
+                                4
+                                
                             })    
                         }
                         howDoYouFeelDiv.drawChart=drawChart
@@ -319,6 +515,19 @@ console.log('loaded myAsthma.js :-)');
                 //}
             }
             loadAsthmaHistory()
+
+            // PlotLy
+            console.log('ready for plotly')
+
+            asthmaPlot=function(){
+                
+            }
+
+            asthmaPlot()
+
+            4
+
+
 
         
 
@@ -328,3 +537,37 @@ console.log('loaded myAsthma.js :-)');
 
 })()
 
+
+
+// --- Experiments ---
+
+var fb=function(){ // firebase experiments
+    fbFun=function(x){
+        console.log(9)
+    }
+    if(typeof(firebase)){
+        fbFun()
+    }else{
+        $.getScript('https://www.gstatic.com/firebasejs/live/3.0/firebase.js',fbFun)
+    }
+    
+
+}
+
+/*
+
+
+<script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDBKhPwrVFgF4qPI0VxZLULW68eIcslQxs",
+    authDomain: "asthma-34354.firebaseapp.com",
+    databaseURL: "https://asthma-34354.firebaseio.com",
+    storageBucket: "",
+  };
+  firebase.initializeApp(config);
+</script>
+    
+
+*/
